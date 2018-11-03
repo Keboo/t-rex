@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.Builder;
 using System.CommandLine.Invocation;
+using System.CommandLine.Rendering;
+using System.CommandLine.Rendering.Views;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using TRex.CommandLine.Views;
 using TRexLib;
 
 namespace TRex.CommandLine
@@ -97,20 +100,27 @@ namespace TRex.CommandLine
                     resultSet.Where(r => regex.IsMatch(r.FullyQualifiedTestName)));
             }
 
-            IConsoleView<TestResultSet> view = null;
+            View view = null;
 
             switch (format)
             {
                 case OutputFormat.Summary:
-                    view = new SummaryView(hideTestOutput);
+                    view = new TestResultsView(hideTestOutput, resultSet);
                     break;
                 case OutputFormat.Json:
-                    view = new JsonView();
+                    view = new JsonView(resultSet);
                     break;
             }
 
-            await view.WriteAsync(console, resultSet);
-
+            try
+            {
+                console.Render(view);
+            }
+            catch (Exception e)
+            {
+                
+            }
+            
             if (resultSet.Failed.Any())
             {
                 return 1;

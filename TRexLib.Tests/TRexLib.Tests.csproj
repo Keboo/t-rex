@@ -14,6 +14,9 @@
 
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.CommandLine">
+      <HintPath>..\..\System.CommandLine\src\System.CommandLine\bin\Debug\netstandard2.0\System.CommandLine.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.IO.FileSystem" />
     <Reference Include="System.Xml" />
@@ -24,7 +27,6 @@
     <PackageReference Include="newtonsoft.json" Version="11.0.2" />
     <PackageReference Include="xunit" Version="2.3.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
-    <PackageReference Include="System.CommandLine.Experimental" Version="0.1.0-alpha-63322-01" />
   </ItemGroup>
   
   <ItemGroup>

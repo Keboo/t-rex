@@ -76,6 +76,7 @@ namespace TRex.CommandLine
                                                                     })
                                                     })
                                 });
+            
 
             foreach (var groupingByOutcome in groupings.OrderBy(t => t.Outcome))
             {

@@ -1,21 +1,24 @@
-using System.CommandLine;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System;
+using System.CommandLine.Rendering;
+using System.CommandLine.Rendering.Views;
 using TRexLib;
 
 namespace TRex.CommandLine
 {
-    public class JsonView : IConsoleView<TestResultSet>
+    public sealed class JsonView : ContentView
     {
-        public async Task WriteAsync(IConsole console, TestResultSet testResults)
+        public JsonView(TestResultSet testResults)
         {
+            if (testResults == null) throw new ArgumentNullException(nameof(testResults));
+            
             var json = JsonConvert.SerializeObject(
                 testResults,
                 Formatting.Indented,
                 new FileInfoJsonConverter(),
                 new DirectoryInfoJsonConverter());
 
-            await console.Out.WriteAsync(json);
+            Span = new ContentSpan(json);
         }
     }
 }

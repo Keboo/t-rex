@@ -8,6 +8,7 @@ namespace TRexLib.Tests
     public class TestConsole : IConsole
     {
         private bool _isVirtualTerminalMode;
+        private bool _IsVirtualTerminal;
 
         public TestConsole()
         {
@@ -16,6 +17,7 @@ namespace TRexLib.Tests
         }
 
         public TextWriter Error { get; }
+        public ConsoleColor BackgroundColor { get; set; }
 
         public void SetOut(TextWriter writer)
         {
@@ -54,6 +56,8 @@ namespace TRexLib.Tests
         public bool IsErrorRedirected { get; private set; }
 
         public bool IsInputRedirected { get; private set; }
+
+        bool IConsole.IsVirtualTerminal => _IsVirtualTerminal;
 
         public int WindowWidth { get; set; } = 80;
 
