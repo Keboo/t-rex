@@ -27,5 +27,25 @@ namespace TRex.CommandLine
                     throw new NotSupportedException();
             }
         }
+
+        public static System.ConsoleColor GetColorForOutcome( this TestOutcome outcome)
+        {
+            switch (outcome)
+            {
+                case TestOutcome.NotExecuted:
+                case TestOutcome.Inconclusive:
+                case TestOutcome.Pending:
+                    return System.ConsoleColor.Yellow;
+                case TestOutcome.Failed:
+                    return System.ConsoleColor.Red;
+                case TestOutcome.Passed:
+                    return System.ConsoleColor.Green;
+                case TestOutcome.Timeout:
+                    return System.ConsoleColor.Magenta;
+
+                default:
+                    throw new NotSupportedException();
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.CommandLine.Rendering;
 using System.CommandLine.Rendering.Views;
 using System.Linq;
 using TRexLib;
@@ -8,7 +9,7 @@ namespace TRex.CommandLine.Views
 {
     public sealed class TestResultsView : StackLayoutView
     {
-        public TestResultsView(bool hideTestOutput, IEnumerable<TestResult> testResults)
+        public TestResultsView(bool hideTestOutput, TestResultSet testResults)
         {
             if (testResults == null) throw new ArgumentNullException(nameof(testResults));
 
@@ -46,7 +47,7 @@ namespace TRex.CommandLine.Views
                                 .Sum(className =>
                                     className.Items
                                         .Sum(test => test.Duration?.TotalSeconds)));
-                var groupView = new ColoredStackLayoutView(GetColorForOutcome(groupingByOutcome.Outcome));
+                var groupView = new ColoredStackLayoutView(groupingByOutcome.Outcome.GetColorForOutcome());
                 Add(groupView);
 
                 groupView.Add(new StackLayoutView(Orientation.Horizontal)
@@ -65,7 +66,7 @@ namespace TRex.CommandLine.Views
 
                     groupView.Add(new StackLayoutView(Orientation.Horizontal)
                     {
-                        new ContentView($"  {groupingByNamespace.Namespace}     "),
+                        new TContentView($"  {groupingByNamespace.Namespace}     "),
                         new DurationView(durationForNamespace)
                     });
 
@@ -93,27 +94,28 @@ namespace TRex.CommandLine.Views
                 }
 
             }
+
+            Add(new SummaryView(testResults.Passed.Count, testResults.Failed.Count, testResults.NotExecuted.Count));
+        }
+    }
+
+    public class TContentView : ContentView
+    {
+        public TContentView(string content)
+            : base(content)
+        {
+            
         }
 
-
-        private static System.ConsoleColor GetColorForOutcome(TestOutcome outcome)
+        public override Size Measure(ConsoleRenderer renderer, Size maxSize)
         {
-            switch (outcome)
-            {
-                case TestOutcome.NotExecuted:
-                case TestOutcome.Inconclusive:
-                case TestOutcome.Pending:
-                    return System.ConsoleColor.Yellow;
-                case TestOutcome.Failed:
-                    return System.ConsoleColor.Red;
-                case TestOutcome.Passed:
-                    return System.ConsoleColor.Green;
-                case TestOutcome.Timeout:
-                    return System.ConsoleColor.Magenta;
+            var rv =  base.Measure(renderer, maxSize);
+            return rv;
+        }
 
-                default:
-                    throw new NotSupportedException();
-            }
+        public override void Render(ConsoleRenderer renderer, Region region)
+        {
+            base.Render(renderer, region);
         }
     }
 }

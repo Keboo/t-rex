@@ -105,6 +105,7 @@ namespace TRex.CommandLine
             switch (format)
             {
                 case OutputFormat.Summary:
+                    await new SummaryView(hideTestOutput).WriteAsync(console, resultSet);
                     view = new TestResultsView(hideTestOutput, resultSet);
                     break;
                 case OutputFormat.Json:
